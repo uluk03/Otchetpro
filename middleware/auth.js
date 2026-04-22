@@ -1,8 +1,8 @@
-function isAuth(req, res, next) {
+function auth(req, res, next) {
     if (!req.session.user) {
-      return res.send('Нет доступа (нужно войти)')
+      return res.send('Нет доступа ❌')
     }
     next()
   }
   
-  module.exports = isAuth
+  module.exports = auth

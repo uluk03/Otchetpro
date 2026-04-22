@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Доходы</title>
+</head>
+<body>
+
+<h2>Добавить доход</h2>
+
+<form id="incomeForm">
+  <input type="text" id="name" placeholder="Имя клиента" required>
+  <br><br>
+  <input type="number" id="hectares" placeholder="Гектары" required>
+  <br><br>
+  <input type="number" id="price" placeholder="Цена за гектар" required>
+  <br><br>
+  <button type="submit">Добавить</button>
+</form>
+
+<p id="msg"></p>
+
+<script>
+document.getElementById('incomeForm').addEventListener('submit', async (e) => {
+  e.preventDefault()
+
+  const name = document.getElementById('name').value
+  const hectares = document.getElementById('hectares').value
+  const price = document.getElementById('price').value
+
+  const res = await fetch('/income', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({ name, hectares, price })
+  })
+
+  const text = await res.text()
+  document.getElementById('msg').innerText = text
+})
+</script>
+
+</body>
+</html>

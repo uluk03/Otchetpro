@@ -1,13 +1,19 @@
 const express = require('express')
-const app = express()
+const session = require('express-session')
 
+const app = express()
 const authRoutes = require('./routes/auth')
-const db = require('./db')
 
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 
-// роуты
+// 🔐 SESSION
+app.use(session({
+  secret: 'agronom-secret-key',
+  resave: false,
+  saveUninitialized: false
+}))
+
 app.use('/auth', authRoutes)
 
 app.get('/', (req, res) => {
@@ -17,3 +23,14 @@ app.get('/', (req, res) => {
 app.listen(3000, '0.0.0.0', () => {
   console.log('Server running on port 3000')
 })
+
+
+
+const isAuth = require('./middleware/auth')
+
+app.get('/income', isAuth, (req, res) => {
+  res.send('Это защищённая страница доходов 🚜')
+})
+
+
+app.use(express.static('public'))

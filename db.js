@@ -1,40 +1,38 @@
-const sqlite3 = require('sqlite3').verbose()
+const Database = require('better-sqlite3')
 
-const db = new sqlite3.Database('./database.db')
+const db = new Database('database.db')
 
-// таблицы
-db.serialize(() => {
+// users
+db.prepare(`
+CREATE TABLE IF NOT EXISTS users (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  username TEXT,
+  password TEXT,
+  role TEXT DEFAULT 'user'
+)
+`).run()
 
-  db.run(`
-    CREATE TABLE IF NOT EXISTS users (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
-      username TEXT,
-      password TEXT,
-      role TEXT DEFAULT 'user'
-    )
-  `)
+// income
+db.prepare(`
+CREATE TABLE IF NOT EXISTS income (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  user_id INTEGER,
+  name TEXT,
+  hectares REAL,
+  price REAL,
+  income REAL
+)
+`).run()
 
-  db.run(`
-    CREATE TABLE IF NOT EXISTS income (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
-      user_id INTEGER,
-      name TEXT,
-      hectares REAL,
-      price REAL,
-      income REAL
-    )
-  `)
-
-  db.run(`
-    CREATE TABLE IF NOT EXISTS expense (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
-      user_id INTEGER,
-      category TEXT,
-      amount REAL,
-      description TEXT
-    )
-  `)
-
-})
+// expense
+db.prepare(`
+CREATE TABLE IF NOT EXISTS expense (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  user_id INTEGER,
+  category TEXT,
+  amount REAL,
+  description TEXT
+)
+`).run()
 
 module.exports = db
